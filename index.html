@@ -73,9 +73,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);font-fami
 /* enter btn */
 #enterBtn{
   font-family:'Orbitron',monospace;font-weight:900;
-  font-size:clamp(.55rem,2.5vw,.95rem);letter-spacing:.18em;text-transform:uppercase;
+  font-size:clamp(.85rem,4vw,1.25rem);letter-spacing:.2em;text-transform:uppercase;
   color:var(--ink);background:linear-gradient(135deg,#FFF3A3,#FFD700,#FF9A00);
-  border:none;border-radius:50px;padding:clamp(.75em,2vw,1em) clamp(1.8em,5vw,3em);
+  border:none;border-radius:50px;padding:clamp(1em,3vw,1.3em) clamp(2.5em,6vw,4em);
   cursor:pointer;-webkit-tap-highlight-color:transparent;
   box-shadow:0 0 24px 7px rgba(255,215,0,.4),0 0 60px 16px rgba(255,180,0,.18);
   animation:fsu 1s 1.7s both,bfloat 3.5s 2.7s infinite;
@@ -262,7 +262,7 @@ input[type=text]::placeholder{color:rgba(255,255,255,.25);}
   <h1 class="hl">USTOZIM, SIZNING BILIMINGIZ<br>BIZNI YUKSALISHGA YETAKLAYDI!</h1>
   <div class="sep"></div>
   <p class="sub">O'QITUVCHILAR VA MURABBIYLAR KUNI MUBORAK BO'LSIN!</p>
-  <button id="enterBtn">✦ &nbsp; KIRISH &nbsp; ✦</button>
+  <button type="button" id="enterBtn">✦ &nbsp; KIRISH &nbsp; ✦</button>
 </div>
 
 <!-- ══ SCREEN 2: FORM ══ -->
@@ -270,7 +270,7 @@ input[type=text]::placeholder{color:rgba(255,255,255,.25);}
   <div class="form-card anim-in">
     <div class="corner tl"></div><div class="corner tr"></div>
     <div class="corner bl"></div><div class="corner br"></div>
-    <button class="back-btn" id="backBtn">← Orqaga</button>
+    <button type="button" class="back-btn" id="backBtn">← Orqaga</button>
     <div class="form-topbar">
       <div class="bar-line"></div><span class="bar-icon">📐</span><div class="bar-line"></div>
     </div>
@@ -281,14 +281,14 @@ input[type=text]::placeholder{color:rgba(255,255,255,.25);}
 
     <label>Jinsingiz</label>
     <div class="gender-row">
-      <button class="g-btn" data-g="erkak">👨 Erkak</button>
-      <button class="g-btn" data-g="ayol">👩 Ayol</button>
+      <button type="button" class="g-btn" data-g="erkak">👨 Erkak</button>
+      <button type="button" class="g-btn" data-g="ayol">👩 Ayol</button>
     </div>
 
     <label>Dars beradigan faningiz</label>
     <div class="subj-grid" id="subjGrid"></div>
 
-    <button id="submitBtn" disabled>Tabriknomani ko'rish →</button>
+    <button type="button" id="submitBtn" disabled>Tabriknomani ko'rish →</button>
   </div>
 </div>
 
@@ -304,7 +304,7 @@ input[type=text]::placeholder{color:rgba(255,255,255,.25);}
     <div class="card-body" id="cardBody"></div>
     <p class="card-sig">✨ Bayramingiz muborak bo'lsin, ustoz! ✨</p>
   </div>
-  <button id="exitBtn">← Bosh sahifaga qaytish</button>
+  <button type="button" id="exitBtn">← Bosh sahifaga qaytish</button>
 </div>
 
 <script>
@@ -426,7 +426,7 @@ const SUBJS=[
   {key:'tarix',         label:'Tarix',       icon:'📜'},
   {key:'adabiyot',      label:'Adabiyot',    icon:'📖'},
   {key:'ingliz',        label:"Ingliz tili", icon:'🌐'},
-  {key:'rus',           label:'Rus tili',    icon:'🇷🇺'},
+  {key:'rus',           label:'Rus tili',    icon:'📚'},
   {key:'informatika',   label:'Informatika', icon:'💻'},
   {key:'geografiya',    label:'Geografiya',  icon:'🌍'},
   {key:'tarbiya',       label:'Jismoniy',    icon:'⚽'},
@@ -500,7 +500,7 @@ function getCard(name,gender,subj){
       p4:`Bizga dunyoning eshiklarini ochib berganingiz uchun katta rahmat! Bayramingiz muborak bo'lsin, ustoz!`,
     },
     rus:{
-      icon:'🇷🇺',
+      icon:'📚',
       title:`Aziz va hurmatli ${u}!`,
       p1:`Sizni <span class="hl-gold">1-oktabr — O'qituvchilar va murabbiylar kuni</span> bilan samimiy tabriklayman!`,
       p2:`${E?'Siz':'Siz'} bizga nafaqat <span class="hl-cyan">rus tilini</span> o'rgatdingiz, balki yangi madaniyat va adabiyot dunyosiga <span class="hl-gold">ko'prik</span> qurdingiz. Sizning sabringiz va mehribonligingiz bizga katta kuch berdi.`,
@@ -561,12 +561,14 @@ function getCard(name,gender,subj){
 
 /* ── FORM UI ── */
 const grid=document.getElementById('subjGrid');
+const nameInp=document.getElementById('nameInp');
 SUBJS.forEach(s=>{
   const b=document.createElement('button');
+  b.type='button'; // prevent form submission
   b.className='s-btn';b.dataset.key=s.key;
   b.innerHTML=`${s.icon}<br>${s.label}`;
-  b.addEventListener('click',()=>selectSubj(s.key));
-  b.addEventListener('touchend',e=>{e.preventDefault();selectSubj(s.key);},{passive:false});
+  b.addEventListener('click',()=>{ nameInp.blur(); selectSubj(s.key); });
+  b.addEventListener('touchend',e=>{ e.preventDefault(); nameInp.blur(); selectSubj(s.key); },{passive:false});
   grid.appendChild(b);
 });
 
@@ -578,8 +580,8 @@ function selectSubj(k){
 }
 
 document.querySelectorAll('.g-btn').forEach(b=>{
-  b.addEventListener('click',()=>selectGender(b.dataset.g));
-  b.addEventListener('touchend',e=>{e.preventDefault();selectGender(b.dataset.g);},{passive:false});
+  b.addEventListener('click',()=>{ nameInp.blur(); selectGender(b.dataset.g); });
+  b.addEventListener('touchend',e=>{ e.preventDefault(); nameInp.blur(); selectGender(b.dataset.g); },{passive:false});
 });
 function selectGender(g){
   document.querySelectorAll('.g-btn').forEach(b=>b.classList.toggle('active',b.dataset.g===g));
