@@ -78,7 +78,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);font-fami
   border:none;border-radius:50px;padding:clamp(1em,3vw,1.3em) clamp(2.5em,6vw,4em);
   cursor:pointer;-webkit-tap-highlight-color:transparent;
   box-shadow:0 0 24px 7px rgba(255,215,0,.4),0 0 60px 16px rgba(255,180,0,.18);
-  animation:fsu 1s 1.7s both,bfloat 3.5s 2.7s infinite;
+  animation:fsu 1s 1.7s both;
   transition:filter .2s,transform .15s;
 }
 #enterBtn:hover{filter:brightness(1.15);}
@@ -220,7 +220,6 @@ input[type=text]::placeholder{color:rgba(255,255,255,.25);}
 .card-sig{font-family:'Cinzel',serif;font-size:clamp(.68rem,2vw,.9rem);color:rgba(255,215,0,.7);
   text-align:center;margin-top:1.5rem;letter-spacing:.07em;}
 #exitBtn{
-  pointer-events:auto;
   margin-top:clamp(.8rem,2vh,1.2rem);
   flex-shrink:0;
   font-family:'Orbitron',monospace;font-weight:900;
@@ -431,8 +430,7 @@ const SUBJS=[
   {key:'geografiya',    label:'Geografiya',  icon:'🌍'},
   {key:'tarbiya',       label:'Jismoniy',    icon:'⚽'},
   {key:'musiqa',        label:'Musiqa',      icon:'🎵'},
-  {key:'texnologiya',   label:'Texnologiya', icon:'🔧'},
-  {key:'boshqa',        label:'Boshqa fan',  icon:'✨'},
+  {key:'texnologiya',   label:'Texnologiya', icon:'🔧'}
 ];
 
 /* ── CONGRATULATIONS DATA ── */
