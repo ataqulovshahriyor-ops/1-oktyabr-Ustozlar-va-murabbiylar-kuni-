@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<title>O'qituvchilar va Murabbiylar Kuni</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --gold:#FFD700;--gold-l:#FFF3A3;--gold-d:#B8860B;
+  --ink:#05080F;--navy:#080D22;
+  --nb:#00D4FF;--nc:#00FFC8;--np:#BF5FFF;
+  --wh:#E8EEFF;
+}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);font-family:'Rajdhani',sans-serif;}
+
+/* cursor */
+@media(pointer:fine){body{cursor:none;}#cur,#curR{display:block;}}
+@media(pointer:coarse){#cur,#curR{display:none;}}
+#cur{position:fixed;z-index:9999;pointer-events:none;width:16px;height:16px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,215,0,.95)0%,rgba(255,215,0,0)70%);
+  transform:translate(-50%,-50%);top:0;left:0;
+  box-shadow:0 0 14px 5px rgba(255,215,0,.5),0 0 32px 10px rgba(255,215,0,.2);}
+#curR{position:fixed;z-index:9998;pointer-events:none;width:38px;height:38px;border-radius:50%;
+  border:1.5px solid rgba(255,215,0,.4);transform:translate(-50%,-50%);top:0;left:0;}
+
+/* bg */
+#bgC{position:fixed;inset:0;z-index:0;}
+
+
+/* ═══ SCREENS ═══ */
+.screen{
+  position:fixed;inset:0;z-index:10;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:clamp(1rem,4vw,2.5rem);
+  transition:opacity .5s,transform .5s;
+}
+.screen.hidden{opacity:0;pointer-events:none;transform:translateY(30px);}
+.screen.up{transform:translateY(-40px);opacity:0;pointer-events:none;}
+
+/* ══ MAIN SCREEN ══ */
+#sMain{text-align:center;}
+.badge{
+  font-family:'Orbitron',monospace;font-size:clamp(.5rem,2.5vw,.78rem);
+  font-weight:700;letter-spacing:clamp(.2em,.8vw,.45em);color:var(--nb);
+  text-transform:uppercase;margin-bottom:clamp(1rem,3.5vh,2rem);
+  text-shadow:0 0 10px var(--nb),0 0 24px var(--nb);
+  animation:fsu .8s .2s both;
+}
+.hl{
+  font-family:'Cinzel',serif;font-weight:900;
+  font-size:clamp(1rem,4.2vw,2.8rem);line-height:1.28;
+  letter-spacing:.05em;text-transform:uppercase;
+  background:linear-gradient(135deg,#FFF3A3 0%,#FFD700 42%,#FF9A00 78%,#FFF3A3 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 24px rgba(255,215,0,.6)) drop-shadow(0 0 50px rgba(255,180,0,.3));
+  animation:fsu .9s .45s both,pulse 4s 1.5s infinite;
+  max-width:min(820px,92vw);
+}
+.sep{
+  width:clamp(50px,16vw,170px);height:2px;margin:clamp(.8rem,2vh,1.7rem) auto;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  box-shadow:0 0 10px 3px rgba(255,215,0,.4);animation:fi .7s 1.1s both;
+}
+.sub{
+  font-family:'Orbitron',monospace;font-size:clamp(.5rem,2.2vw,1.05rem);
+  font-weight:400;letter-spacing:clamp(.08em,.5vw,.2em);text-transform:uppercase;
+  color:var(--wh);text-shadow:0 0 10px rgba(255,255,255,.3),0 0 26px rgba(0,212,255,.22);
+  animation:fsu .8s 1.3s both;max-width:min(660px,92vw);line-height:1.5;
+  margin-bottom:clamp(1.5rem,4vh,2.8rem);
+}
+/* enter btn */
+#enterBtn{
+  font-family:'Orbitron',monospace;font-weight:900;
+  font-size:clamp(.55rem,2.5vw,.95rem);letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink);background:linear-gradient(135deg,#FFF3A3,#FFD700,#FF9A00);
+  border:none;border-radius:50px;padding:clamp(.75em,2vw,1em) clamp(1.8em,5vw,3em);
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  box-shadow:0 0 24px 7px rgba(255,215,0,.4),0 0 60px 16px rgba(255,180,0,.18);
+  animation:fsu 1s 1.7s both,bfloat 3.5s 2.7s infinite;
+  transition:filter .2s,transform .15s;
+}
+#enterBtn:hover{filter:brightness(1.15);}
+#enterBtn:active{transform:scale(.95);}
+
+/* ══ FORM SCREEN ══ */
+#sForm{max-width:min(500px,96vw);width:100%;}
+.form-card{
+  background:linear-gradient(145deg,#080d22,#0c1230,#0a0e22);
+  border:1px solid rgba(255,215,0,.22);border-radius:20px;
+  padding:clamp(1.4rem,5vw,2.4rem) clamp(1.2rem,5vw,2.2rem);
+  box-shadow:0 0 40px 8px rgba(255,215,0,.08),0 0 80px 20px rgba(0,100,200,.12),0 24px 60px rgba(0,0,0,.7);
+  position:relative;
+}
+.corner{position:absolute;width:22px;height:22px;border-color:rgba(255,215,0,.35);border-style:solid;}
+.tl{top:10px;left:10px;border-width:2px 0 0 2px;}
+.tr{top:10px;right:10px;border-width:2px 2px 0 0;}
+.bl{bottom:10px;left:10px;border-width:0 0 2px 2px;}
+.br{bottom:10px;right:10px;border-width:0 2px 2px 0;}
+.form-title{
+  font-family:'Cinzel',serif;font-weight:900;text-align:center;
+  font-size:clamp(.9rem,3vw,1.35rem);margin-bottom:1.4rem;
+  background:linear-gradient(135deg,#FFF3A3,#FFD700,#FF9A00);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 12px rgba(255,215,0,.4));line-height:1.35;
+}
+.form-topbar{display:flex;align-items:center;gap:.6rem;margin-bottom:1.2rem;}
+.bar-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(255,215,0,.45),transparent);}
+.bar-icon{font-size:1.4rem;line-height:1;}
+
+label{
+  display:block;font-family:'Orbitron',monospace;font-size:clamp(.4rem,1.8vw,.62rem);
+  font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--nb);
+  margin-bottom:.45rem;margin-top:1rem;text-shadow:0 0 8px var(--nb);
+}
+label:first-of-type{margin-top:0;}
+input[type=text]{
+  width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,215,0,.25);
+  border-radius:10px;padding:.7em 1em;color:var(--wh);
+  font-family:'Rajdhani',sans-serif;font-size:clamp(.8rem,2.5vw,1rem);
+  outline:none;transition:border-color .25s,box-shadow .25s;
+  -webkit-appearance:none;
+}
+input[type=text]:focus{border-color:rgba(255,215,0,.6);box-shadow:0 0 12px rgba(255,215,0,.2);}
+input[type=text]::placeholder{color:rgba(255,255,255,.25);}
+
+/* gender toggle */
+.gender-row{display:flex;gap:.7rem;margin-top:.2rem;}
+.g-btn{
+  flex:1;padding:.65em .5em;border-radius:10px;border:1px solid rgba(255,215,0,.22);
+  background:rgba(255,255,255,.04);color:rgba(255,255,255,.55);
+  font-family:'Rajdhani',sans-serif;font-size:clamp(.75rem,2.2vw,.95rem);font-weight:600;
+  cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent;
+  text-align:center;
+}
+.g-btn.active{
+  background:linear-gradient(135deg,rgba(255,215,0,.18),rgba(255,180,0,.1));
+  border-color:rgba(255,215,0,.6);color:var(--gold);
+  box-shadow:0 0 12px rgba(255,215,0,.2);
+}
+
+/* subject grid */
+.subj-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.3rem;
+}
+@media(max-width:380px){.subj-grid{grid-template-columns:repeat(2,1fr);}}
+.s-btn{
+  padding:.55em .3em;border-radius:8px;border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.04);color:rgba(255,255,255,.5);
+  font-family:'Rajdhani',sans-serif;font-size:clamp(.6rem,2vw,.82rem);font-weight:600;
+  cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent;
+  text-align:center;line-height:1.3;
+}
+.s-btn:hover{border-color:rgba(255,215,0,.35);color:rgba(255,215,0,.75);}
+.s-btn.active{
+  background:linear-gradient(135deg,rgba(255,215,0,.2),rgba(255,180,0,.12));
+  border-color:rgba(255,215,0,.65);color:var(--gold);
+  box-shadow:0 0 10px rgba(255,215,0,.18);
+}
+
+/* submit */
+#submitBtn{
+  width:100%;margin-top:1.4rem;
+  font-family:'Orbitron',monospace;font-weight:700;
+  font-size:clamp(.45rem,2vw,.72rem);letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink);background:linear-gradient(135deg,#FFF3A3,#FFD700,#FF9A00);
+  border:none;border-radius:50px;padding:.85em 1.5em;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  box-shadow:0 0 20px 5px rgba(255,215,0,.35);
+  transition:filter .2s,transform .15s;
+}
+#submitBtn:hover{filter:brightness(1.12);}
+#submitBtn:active{transform:scale(.97);}
+#submitBtn:disabled{opacity:.4;cursor:not-allowed;}
+
+/* back btn */
+.back-btn{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-family:'Orbitron',monospace;font-size:clamp(.4rem,1.8vw,.6rem);
+  font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:rgba(255,215,0,.55);background:none;border:none;cursor:pointer;
+  margin-bottom:1rem;padding:.3em 0;-webkit-tap-highlight-color:transparent;
+  transition:color .2s;
+}
+.back-btn:hover{color:rgba(255,215,0,.9);}
+
+/* ══ CARD SCREEN ══ */
+#sCard{max-width:min(560px,96vw);width:100%;}
+.card-wrap{
+  background:linear-gradient(145deg,#080d22,#0c1230,#0a0e22);
+  border:1px solid rgba(255,215,0,.25);border-radius:20px;
+  padding:clamp(1.4rem,5vw,2.4rem) clamp(1.2rem,5vw,2.2rem);
+  box-shadow:0 0 40px 8px rgba(255,215,0,.09),0 0 80px 20px rgba(0,100,200,.13),0 28px 70px rgba(0,0,0,.75);
+  position:relative;max-height:72vh;overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:rgba(255,215,0,.2) transparent;
+}
+.card-wrap::-webkit-scrollbar{width:4px;}
+.card-wrap::-webkit-scrollbar-thumb{background:rgba(255,215,0,.2);border-radius:4px;}
+.card-date{
+  font-family:'Orbitron',monospace;font-size:clamp(.42rem,1.8vw,.65rem);
+  letter-spacing:.28em;color:var(--nb);text-align:center;
+  text-shadow:0 0 10px var(--nb);margin-bottom:.8rem;opacity:.85;
+}
+.card-icon{font-size:clamp(1.8rem,5vw,2.8rem);text-align:center;display:block;margin-bottom:.6rem;}
+.card-title{
+  font-family:'Cinzel',serif;font-weight:900;text-align:center;
+  font-size:clamp(.9rem,3.2vw,1.45rem);margin-bottom:1.3rem;
+  background:linear-gradient(135deg,#FFF3A3,#FFD700,#FF9A00,#FFF3A3);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 14px rgba(255,215,0,.45));line-height:1.35;
+}
+.card-sep{width:55%;height:1px;margin:0 auto 1.3rem;background:linear-gradient(90deg,transparent,rgba(255,215,0,.4),transparent);}
+.card-body{font-family:'Rajdhani',sans-serif;font-size:clamp(.8rem,2.4vw,1.02rem);
+  font-weight:400;line-height:1.88;color:#C8D4F0;text-align:left;}
+.card-body p{margin-bottom:.95em;}
+.card-body p:last-child{margin-bottom:0;}
+.hl-gold{color:var(--gold);font-weight:700;}
+.hl-cyan{color:#7DF9FF;font-style:italic;}
+.card-sig{font-family:'Cinzel',serif;font-size:clamp(.68rem,2vw,.9rem);color:rgba(255,215,0,.7);
+  text-align:center;margin-top:1.5rem;letter-spacing:.07em;}
+#exitBtn{
+  pointer-events:auto;
+  margin-top:clamp(.8rem,2vh,1.2rem);
+  flex-shrink:0;
+  font-family:'Orbitron',monospace;font-weight:900;
+  font-size:clamp(.55rem,2.5vw,.95rem);letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink);
+  background:linear-gradient(135deg,#FFF3A3,#FFD700,#FF9A00);
+  border:none;border-radius:50px;
+  padding:clamp(.75em,2vw,1em) clamp(1.8em,5vw,3em);
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  box-shadow:0 0 24px 7px rgba(255,215,0,.4),0 0 60px 16px rgba(255,180,0,.18);
+  transition:filter .2s,transform .15s,box-shadow .25s;
+  white-space:nowrap;
+}
+#exitBtn:hover{filter:brightness(1.15);box-shadow:0 0 38px 12px rgba(255,215,0,.65),0 0 80px 24px rgba(255,180,0,.35);}
+#exitBtn:active{transform:scale(.96);}
+
+/* keyframes */
+@keyframes fsu{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{filter:drop-shadow(0 0 24px rgba(255,215,0,.6)) drop-shadow(0 0 50px rgba(255,180,0,.3))}50%{filter:drop-shadow(0 0 44px rgba(255,215,0,1)) drop-shadow(0 0 90px rgba(255,200,0,.6))}}
+@keyframes bfloat{0%,100%{transform:translateX(0) translateY(0)}50%{transform:translateX(0) translateY(-9px)}}
+@keyframes slideIn{from{opacity:0;transform:translateY(36px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+.anim-in{animation:slideIn .45s cubic-bezier(.22,1,.36,1) both;}
+
+@media(max-width:480px){
+  .hl{font-size:clamp(.85rem,5.5vw,1.5rem);}
+  .sub{font-size:clamp(.48rem,3.6vw,.82rem);letter-spacing:.07em;}
+}
+</style>
+</head>
+<body>
+<div id="cur"></div><div id="curR"></div>
+<canvas id="bgC"></canvas>
+
+<!-- ══ SCREEN 1: MAIN ══ -->
+<div class="screen" id="sMain">
+  <div class="badge">1 — O K T Y A B R &nbsp; 2 0 2 6</div>
+  <h1 class="hl">USTOZIM, SIZNING BILIMINGIZ<br>BIZNI YUKSALISHGA YETAKLAYDI!</h1>
+  <div class="sep"></div>
+  <p class="sub">O'QITUVCHILAR VA MURABBIYLAR KUNI MUBORAK BO'LSIN!</p>
+  <button id="enterBtn">✦ &nbsp; KIRISH &nbsp; ✦</button>
+</div>
+
+<!-- ══ SCREEN 2: FORM ══ -->
+<div class="screen hidden" id="sForm">
+  <div class="form-card anim-in">
+    <div class="corner tl"></div><div class="corner tr"></div>
+    <div class="corner bl"></div><div class="corner br"></div>
+    <button class="back-btn" id="backBtn">← Orqaga</button>
+    <div class="form-topbar">
+      <div class="bar-line"></div><span class="bar-icon">📐</span><div class="bar-line"></div>
+    </div>
+    <h2 class="form-title">Ma'lumotlaringizni<br>kiriting</h2>
+
+    <label for="nameInp">Ismingiz</label>
+    <input type="text" id="nameInp" placeholder="Ismingizni kiriting..." autocomplete="off" maxlength="40"/>
+
+    <label>Jinsingiz</label>
+    <div class="gender-row">
+      <button class="g-btn" data-g="erkak">👨 Erkak</button>
+      <button class="g-btn" data-g="ayol">👩 Ayol</button>
+    </div>
+
+    <label>Dars beradigan faningiz</label>
+    <div class="subj-grid" id="subjGrid"></div>
+
+    <button id="submitBtn" disabled>Tabriknomani ko'rish →</button>
+  </div>
+</div>
+
+<!-- ══ SCREEN 3: CARD ══ -->
+<div class="screen hidden" id="sCard">
+  <div class="card-wrap anim-in">
+    <div class="corner tl"></div><div class="corner tr"></div>
+    <div class="corner bl"></div><div class="corner br"></div>
+    <div class="card-date">1 — Oktabr · 2026 · O'qituvchilar va Murabbiylar Kuni</div>
+    <span class="card-icon" id="cardIcon">🏆</span>
+    <h2 class="card-title" id="cardTitle"></h2>
+    <div class="card-sep"></div>
+    <div class="card-body" id="cardBody"></div>
+    <p class="card-sig">✨ Bayramingiz muborak bo'lsin, ustoz! ✨</p>
+  </div>
+  <button id="exitBtn">← Bosh sahifaga qaytish</button>
+</div>
+
+<script>
+/* ── CURSOR ── */
+const cur=document.getElementById('cur'),curR=document.getElementById('curR');
+let mx=-999,my=-999,rx=-999,ry=-999;
+if(window.matchMedia('(pointer:fine)').matches){
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+  (function ac(){rx+=(mx-rx)*.13;ry+=(my-ry)*.13;
+    cur.style.left=mx+'px';cur.style.top=my+'px';
+    curR.style.left=rx+'px';curR.style.top=ry+'px';requestAnimationFrame(ac);})();
+}
+
+/* ── FESTIVE BACKGROUND ── */
+const cv=document.getElementById('bgC'),ctx=cv.getContext('2d');
+let W,H,stars=[],confetti=[],orbs=[];
+
+function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;buildParticles();}
+
+function buildParticles(){
+  /* twinkle stars */
+  stars=Array.from({length:160},()=>({
+    x:Math.random()*W,y:Math.random()*H,
+    r:Math.random()*1.8+.3,
+    a:Math.random()*.85+.15,
+    ph:Math.random()*Math.PI*2,
+    sp:Math.random()*.004+.001,
+    col:['#FFD700','#FFF3A3','#FF9A00','#ffffff','#FFE680'][Math.floor(Math.random()*5)]
+  }));
+  /* slow confetti pieces */
+  confetti=Array.from({length:55},()=>({
+    x:Math.random()*W, y:Math.random()*H,
+    w:Math.random()*7+3, h:Math.random()*14+5,
+    angle:Math.random()*Math.PI*2,
+    spin:( Math.random()-.5)*.025,
+    vy:Math.random()*.55+.2,
+    vx:(Math.random()-.5)*.35,
+    col:['#FFD700','#FF9A00','#FF6B35','#FFF3A3','#FFD166','#06D6A0','#118AB2','#EF476F','#BF5FFF','#00FFC8'][Math.floor(Math.random()*10)],
+    a:Math.random()*.75+.25,
+    type:Math.floor(Math.random()*3) // 0=rect 1=circle 2=diamond
+  }));
+  /* glowing orbs */
+  orbs=Array.from({length:6},()=>({
+    x:Math.random()*W, y:Math.random()*H,
+    r:Math.random()*120+60,
+    col:['rgba(255,215,0,.10)','rgba(255,120,0,.09)','rgba(191,95,255,.08)','rgba(0,212,255,.07)','rgba(255,100,50,.09)','rgba(255,235,100,.10)'][Math.floor(Math.random()*6)],
+    vx:(Math.random()-.5)*.4, vy:(Math.random()-.5)*.35
+  }));
+}
+
+let bt=0;
+function drawBg(){
+  bt+=.008;
+
+  /* rich warm gradient base */
+  const bg=ctx.createLinearGradient(0,0,W,H);
+  bg.addColorStop(0,'#0A050F');
+  bg.addColorStop(.35,'#130820');
+  bg.addColorStop(.65,'#1A0A08');
+  bg.addColorStop(1,'#0E0600');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
+
+  /* radial golden glow in center */
+  const cg=ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,W*.55);
+  cg.addColorStop(0,'rgba(180,100,0,.18)');
+  cg.addColorStop(.5,'rgba(120,50,0,.10)');
+  cg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=cg; ctx.fillRect(0,0,W,H);
+
+  /* moving orbs */
+  orbs.forEach(o=>{
+    o.x+=o.vx; o.y+=o.vy;
+    if(o.x<-o.r||o.x>W+o.r) o.vx*=-1;
+    if(o.y<-o.r||o.y>H+o.r) o.vy*=-1;
+    const og=ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,o.r);
+    og.addColorStop(0,o.col); og.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=og; ctx.beginPath(); ctx.arc(o.x,o.y,o.r,0,Math.PI*2); ctx.fill();
+  });
+
+  /* subtle warm grid */
+  ctx.strokeStyle='rgba(180,100,0,.05)'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=80){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=80){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+
+  /* twinkle stars */
+  stars.forEach(s=>{
+    const b=.3+.7*Math.sin(bt*s.sp*300+s.ph);
+    ctx.save(); ctx.globalAlpha=s.a*b;
+    ctx.fillStyle=s.col; ctx.shadowColor=s.col; ctx.shadowBlur=8;
+    ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  });
+
+  /* falling confetti */
+  confetti.forEach(c=>{
+    c.x+=c.vx; c.y+=c.vy; c.angle+=c.spin;
+    if(c.y>H+20){c.y=-20;c.x=Math.random()*W;}
+    ctx.save(); ctx.globalAlpha=c.a;
+    ctx.translate(c.x,c.y); ctx.rotate(c.angle);
+    ctx.fillStyle=c.col; ctx.shadowColor=c.col; ctx.shadowBlur=6;
+    if(c.type===0){ ctx.fillRect(-c.w/2,-c.h/2,c.w,c.h); }
+    else if(c.type===1){ ctx.beginPath();ctx.arc(0,0,c.w*.6,0,Math.PI*2);ctx.fill(); }
+    else { ctx.beginPath();ctx.moveTo(0,-c.h/2);ctx.lineTo(c.w/2,0);ctx.lineTo(0,c.h/2);ctx.lineTo(-c.w/2,0);ctx.closePath();ctx.fill(); }
+    ctx.restore();
+  });
+
+  requestAnimationFrame(drawBg);
+}
+window.addEventListener('resize',resize);resize();drawBg();
+
+
+
+/* ── SUBJECTS ── */
+const SUBJS=[
+  {key:'matematika',    label:'Matematika',  icon:'📊'},
+  {key:'fizika',        label:'Fizika',      icon:'⚛️'},
+  {key:'kimyo',         label:'Kimyo',       icon:'🧪'},
+  {key:'biologiya',     label:'Biologiya',   icon:'🌿'},
+  {key:'tarix',         label:'Tarix',       icon:'📜'},
+  {key:'adabiyot',      label:'Adabiyot',    icon:'📖'},
+  {key:'ingliz',        label:"Ingliz tili", icon:'🌐'},
+  {key:'rus',           label:'Rus tili',    icon:'🇷🇺'},
+  {key:'informatika',   label:'Informatika', icon:'💻'},
+  {key:'geografiya',    label:'Geografiya',  icon:'🌍'},
+  {key:'tarbiya',       label:'Jismoniy',    icon:'⚽'},
+  {key:'musiqa',        label:'Musiqa',      icon:'🎵'},
+  {key:'texnologiya',   label:'Texnologiya', icon:'🔧'},
+  {key:'boshqa',        label:'Boshqa fan',  icon:'✨'},
+];
+
+/* ── CONGRATULATIONS DATA ── */
+function getCard(name,gender,subj){
+  const E=gender==='erkak';
+  const u=name.trim()||'Ustoz';
+  // honorifics
+  const siz=E?'siz':'siz';
+  // subject-specific texts
+  const cards={
+    matematika:{
+      icon:'📐',
+      title:`Aziz va hurmatli ${u}!`,
+      p1:`Sizni <span class="hl-gold">1-oktabr — O'qituvchilar va murabbiylar kuni</span> bilan chin qalbimdan muborakbod etaman!`,
+      p2:`${E?'Siz':'Siz'} bizga nafaqat <span class="hl-cyan">matematika, algebra va geometriya</span> sirlarini o'rgatdingiz, balki hayotning eng murakkab tenglamalarini yechishda kerak bo'ladigan <span class="hl-gold">mantiq, sabr va aniq fikrlashni</span> ham berdingiz. Sizning darslaringiz orqali biz kelajagimizning to'g'ri chiziqlarini, aniq burchaklarini chizdik va cheksiz sonlar dunyosida erkin suzishni o'rgandik.`,
+      p3:`Ilohim, hayotingizdagi quvonch va muvaffaqiyatlar doimo <span class="hl-cyan">geometrik progressiyada</span> ko'payib borsin! G'am-tashvishlar va qiyinchiliklar esa doim <span class="hl-cyan">nolga teng</span> bo'lsin. Umringizning har bir ongi xuddi <span class="hl-gold">isbotlangan teoremadek</span> aniq, go'zal va baxtga to'la o'tsin!`,
+      p4:`Sizdek bilimli, mehribon va o'z kasbining fidoiysi bo'lgan ustozdan ta'lim olayotganimizdan juda faxrlanamiz. Bizga berayotgan bilimlaringiz va ishonchingiz uchun katta rahmat!`,
+    },
+    fizika:{
+      icon:'⚛️',
+      title:`Aziz va hurmatli ${u}!`,
+      p1:`Sizni <span class="hl-gold">1-oktabr — O'qituvchilar va murabbiylar kuni</span> bilan samimiy tabriklayman!`,
+      p2:`${E?'Siz':'Siz'} bizga nafaqat <span class="hl-cyan">fizika qonunlari va formulalar</span>ni o'rgatdingiz, balki borliqni ilmiy ko'z bilan ko'rishni ham o'rgattingiz. Sizning darslaringizda biz <span class="hl-gold">koinot sirlari</span>ni kashf qildik.`,
+      p3:`Ilohim, hayotingizdagi <span class="hl-cyan">energiya va kuch</span> doim maksimal bo'lsin! Quvonch va baxt tortishish kuchdek sizni doim o'ziga jalb qilsin.`,
+      p4:`Bizga koinotning qiziqarli qonunlarini o'rgatganingiz uchun cheksiz minnatdormiz. Bayramingiz muborak, ustoz!`,
+    },
+    kimyo:{
+      icon:'🧪',
+      title:`Aziz va hurmatli ${u}!`,
+      p1:`Sizni <span class="hl-gold">1-oktabr — O'qituvchilar va murabbiylar kuni</span> bilan chin qalbimdan tabriklayman!`,
+      p2:`${E?'Siz':'Siz'} bizga nafaqat <span class="hl-cyan">kimyoviy elementlar va reaksiyalar</span> sirlarini o'rgatdingiz, balki hayotning formulasini ham berdingiz. Sizning darslaringizda biz <span class="hl-gold">moddalar va kuchlar</span> dunyosini kashf etdik.`,
+      p3:`Ilohim, hayotingiz xuddi <span class="hl-cyan">muvozanatli kimyoviy tenglamadek</span> uyg'un bo'lsin! Baxt va shodlik reaktsiyasi hayotingizda doim ekzotermik bo'lsin.`,
+      p4:`Bizga ilm va kashfiyot dunyosini ochib berganingiz uchun katta rahmat! Bayramingiz muborak bo'lsin, ustoz!`,
+    },
+    biologiya:{
+      icon:'🌿',
+      title:`Aziz va hurmatli ${u}!`,
+      p1:`Sizni <span class="hl-gold">1-oktabr — O'qituvchilar va murabbiylar kuni</span> bilan samimiy tabriklayman!`,
+      p2:`${E?'Siz':'Siz'} bizga nafaqat <span class="hl-cyan">tirik tabiat sirlari</span>ni o'rgatdingiz, balki hayotni yanada chuqurroq his etishni ham o'rgattingiz. Sizning darslaringizda biz tabiatning <span class="hl-gold">cheksiz mo'jizalari</span>ni kashf qildik.`,
+      p3:`Ilohim, hayotingiz xuddi <span class="hl-cyan">bahorning yangi o'simligidek</span> doim yashnasin va gullasing! Sog'lik va quvonch sizga hamisha hamroh bo'lsin.`,
+      p4:`Tirik olam qonunlarini sevgi bilan o'rgatganingiz uchun cheksiz minnatdormiz. Bayramingiz muborak, ustoz!`,
+    },
+    tarix:{
+      icon:'📜',
+      title:`Aziz va hurmatli ${u}!`,
+      p1:`Sizni <span class="hl-gold">1-oktabr — O'qituvchilar va murabbiylar kuni</span> bilan chin qalbimdan muborakbod etaman!`,
+      p2:`${E?'Siz':'Siz'} bizga nafaqat <span class="hl-cyan">o'tmish voqealarini</span> o'rgatdingiz, balki tarixdan to'g'ri xulosa chiqarib, <span class="hl-gold">kelajakka dadil qadam tashlashni</span> ham o'rgattingiz.`,
+      p3:`Ilohim, hayotingiz tarixi xuddi <span class="hl-cyan">buyuk shaxslar tarixi kabi</span> ajoyib va ibratli bo'lsin! Nomi doim hurmat bilan tilga olinsin.`,
+      p4:`Bizga o'tmishning donishmandligini berganingiz uchun katta rahmat! Bayramingiz muborak bo'lsin, ustoz!`,
+    },
+    adabiyot:{
+      icon:'📖',
+      title:`Aziz va hurmatli ${u}!`,
+      p1:`Sizni <span class="hl-gold">1-oktabr — O'qituvchilar va murabbiylar kuni</span> bilan samimiy tabriklayman!`,
+      p2:`${E?'Siz':'Siz'} bizga nafaqat <span class="hl-cyan">so'z va adabiyot olamini</span> o'rgatdingiz, balki insoniy tuyg'ularni chuqur his etishni ham o'rgattingiz. Sizning darslaringiz bizning qalbimizga <span class="hl-gold">badiiy so'zning qudrati</span>ni singdirdi.`,
+      p3:`Ilohim, hayotingiz xuddi <span class="hl-cyan">eng go'zal she'r misralaridek</span> ohangdor va mazmunli bo'lsin! Har bir kuningiz yangi ilhom bilan to'lsin.`,
+      p4:`Bizga so'z va adabiyotning cheksiz olamini ochib berganingiz uchun katta rahmat! Bayramingiz muborak, ustoz!`,
+    },
+    ingliz:{
+      icon:'🌐',
+      title:`Aziz va hurmatli ${u}!`,
+      p1:`Sizni <span class="hl-gold">1-oktabr — O'qituvchilar va murabbiylar kuni</span> bilan chin qalbimdan tabriklayman!`,
+      p2:`${E?'Siz':'Siz'} bizga nafaqat <span class="hl-cyan">ingliz tilini</span> o'rgatdingiz, balki butun dunyoga chiqish uchun <span class="hl-gold">kalit</span>ni ham berdingiz. Sizning darslaringiz tufayli biz jahon bilan muloqot qila olamiz.`,
+      p3:`Ilohim, hayotingiz xuddi <span class="hl-cyan">chet eldagi bahorday</span> yangi va ilhomlantiruvchi bo'lsin! Muvaffaqiyatlar doim sizga hamroh bo'lsin.`,
+      p4:`Bizga dunyoning eshiklarini ochib berganingiz uchun katta rahmat! Bayramingiz muborak bo'lsin, ustoz!`,
+    },
+    rus:{
+      icon:'🇷🇺',
+      title:`Aziz va hurmatli ${u}!`,
+      p1:`Sizni <span class="hl-gold">1-oktabr — O'qituvchilar va murabbiylar kuni</span> bilan samimiy tabriklayman!`,
+      p2:`${E?'Siz':'Siz'} bizga nafaqat <span class="hl-cyan">rus tilini</span> o'rgatdingiz, balki yangi madaniyat va adabiyot dunyosiga <span class="hl-gold">ko'prik</span> qurdingiz. Sizning sabringiz va mehribonligingiz bizga katta kuch berdi.`,
+      p3:`Ilohim, hayotingiz xuddi <span class="hl-cyan">buyuk adabiyot sahifalaridek</span> mazmunli va go'zal bo'lsin! Omad va baxt doim yoningizda bo'lsin.`,
+      p4:`Bizga yangi til va madaniyat olamini ochib berganingiz uchun katta rahmat! Bayramingiz muborak, ustoz!`,
+    },
+    informatika:{
+      icon:'💻',
+      title:`Aziz va hurmatli ${u}!`,
+      p1:`Sizni <span class="hl-gold">1-oktabr — O'qituvchilar va murabbiylar kuni</span> bilan chin qalbimdan tabriklayman!`,
+      p2:`${E?'Siz':'Siz'} bizga nafaqat <span class="hl-cyan">kompyuter va dasturlash</span> sirlarini o'rgatdingiz, balki <span class="hl-gold">raqamli kelajakni</span> qurishni ham o'rgattingiz. Sizning darslaringiz tufayli biz texnologiyalar dunyosida erkin harakat qila olamiz.`,
+      p3:`Ilohim, hayotingiz xuddi <span class="hl-cyan">hatasiz ishlayotgan dastur kabi</span> mukammal bo'lsin! Har bir kuningiz yangi kashfiyot bilan to'lsin.`,
+      p4:`Bizga kelajak texnologiyalarini o'rgatganingiz uchun katta rahmat! Bayramingiz muborak bo'lsin, ustoz!`,
+    },
+    geografiya:{
+      icon:'🌍',
+      title:`Aziz va hurmatli ${u}!`,
+      p1:`Sizni <span class="hl-gold">1-oktabr — O'qituvchilar va murabbiylar kuni</span> bilan samimiy tabriklayman!`,
+      p2:`${E?'Siz':'Siz'} bizga nafaqat <span class="hl-cyan">dunyo xaritasini va tabiat</span> sirlarini o'rgatdingiz, balki Yer sayyoramizni yanada chuqurroq sevishni ham o'rgattingiz.`,
+      p3:`Ilohim, hayot sayohatingiz xuddi <span class="hl-cyan">yangi materik kashf qilgandek</span> ajoyib va hayajonli bo'lsin! Umringiz baxt bilan to'lsin.`,
+      p4:`Bizga dunyo kengliklarini ko'rsatganingiz uchun katta rahmat! Bayramingiz muborak bo'lsin, ustoz!`,
+    },
+    tarbiya:{
+      icon:'⚽',
+      title:`Aziz va hurmatli ${u}!`,
+      p1:`Sizni <span class="hl-gold">1-oktabr — O'qituvchilar va murabbiylar kuni</span> bilan chin qalbimdan tabriklayman!`,
+      p2:`${E?'Siz':'Siz'} bizga nafaqat <span class="hl-cyan">jismoniy tarbiya va sport</span>ni o'rgatdingiz, balki <span class="hl-gold">g'alaba irodasi va chidamlilikni</span> ham berdingiz. Sizning darslaringiz bizni ham jisman, ham ruhan baquvvat qildi.`,
+      p3:`Ilohim, hayotingiz xuddi <span class="hl-cyan">chempionning yo'lidek</span> muvaffaqiyatli bo'lsin! Sog'lik va quvvat doim sizga hamroh bo'lsin.`,
+      p4:`Bizni sog'lom va baquvvat tarbiyalab, g'oliblik ruhini singirganingiz uchun katta rahmat! Bayramingiz muborak, ustoz!`,
+    },
+    musiqa:{
+      icon:'🎵',
+      title:`Aziz va hurmatli ${u}!`,
+      p1:`Sizni <span class="hl-gold">1-oktabr — O'qituvchilar va murabbiylar kuni</span> bilan samimiy tabriklayman!`,
+      p2:`${E?'Siz':'Siz'} bizga nafaqat <span class="hl-cyan">musiqa va nota</span> sirlarini o'rgatdingiz, balki hayotni yanada go'zalroq his etishni ham o'rgattingiz. Sizning darslaringiz qalbimizga <span class="hl-gold">abadiy ohang</span> bo'lib singdi.`,
+      p3:`Ilohim, hayotingiz xuddi <span class="hl-cyan">eng go'zal simfoniyaning kulminatsiyasidek</span> yorqin va ulug'vor bo'lsin! Musiqaday ohangdor va baxtli hayot sizga nasib etsin.`,
+      p4:`Bizga musiqaning sehrli dunyosini ochib berganingiz uchun katta rahmat! Bayramingiz muborak bo'lsin, ustoz!`,
+    },
+    texnologiya:{
+      icon:'🔧',
+      title:`Aziz va hurmatli ${u}!`,
+      p1:`Sizni <span class="hl-gold">1-oktabr — O'qituvchilar va murabbiylar kuni</span> bilan chin qalbimdan tabriklayman!`,
+      p2:`${E?'Siz':'Siz'} bizga nafaqat <span class="hl-cyan">texnologiya va hunarmandchilik</span> sirlarini o'rgatdingiz, balki qo'l mehnatining qadri va <span class="hl-gold">yaratishning lazzatini</span> ham berdingiz.`,
+      p3:`Ilohim, hayotingiz xuddi <span class="hl-cyan">mukammal ishlagan mexanizmdek</span> uyg'un va beqaror bo'lsin! Baxt va omad doim yoningizda bo'lsin.`,
+      p4:`Bizga hunarmandlik va ijodiyotni o'rgatganingiz uchun katta rahmat! Bayramingiz muborak bo'lsin, ustoz!`,
+    },
+    boshqa:{
+      icon:'✨',
+      title:`Aziz va hurmatli ${u}!`,
+      p1:`Sizni <span class="hl-gold">1-oktabr — O'qituvchilar va murabbiylar kuni</span> bilan chin qalbimdan muborakbod etaman!`,
+      p2:`${E?'Siz':'Siz'} bizga nafaqat <span class="hl-cyan">fan va bilim sirlarini</span> o'rgatdingiz, balki hayotning eng muhim qoidalarini ham berdingiz: sabr, tirishqoqlik va <span class="hl-gold">doimo o'rganishga intilish</span>.`,
+      p3:`Ilohim, hayotingizdagi quvonch va muvaffaqiyatlar doimo <span class="hl-cyan">ko'payib borsin</span>! Umringiz baxt, salomatlik va shodlikka to'la bo'lsin.`,
+      p4:`Sizdek fidoyi, mehribon ustozdan ta'lim olayotganimizdan juda faxrlanamiz. Bayramingiz muborak bo'lsin, ustoz!`,
+    },
+  };
+  return cards[subj]||cards['boshqa'];
+}
+
+/* ── FORM UI ── */
+const grid=document.getElementById('subjGrid');
+SUBJS.forEach(s=>{
+  const b=document.createElement('button');
+  b.className='s-btn';b.dataset.key=s.key;
+  b.innerHTML=`${s.icon}<br>${s.label}`;
+  b.addEventListener('click',()=>selectSubj(s.key));
+  b.addEventListener('touchend',e=>{e.preventDefault();selectSubj(s.key);},{passive:false});
+  grid.appendChild(b);
+});
+
+let selGender='',selSubj='';
+
+function selectSubj(k){
+  document.querySelectorAll('.s-btn').forEach(b=>b.classList.toggle('active',b.dataset.key===k));
+  selSubj=k;checkForm();
+}
+
+document.querySelectorAll('.g-btn').forEach(b=>{
+  b.addEventListener('click',()=>selectGender(b.dataset.g));
+  b.addEventListener('touchend',e=>{e.preventDefault();selectGender(b.dataset.g);},{passive:false});
+});
+function selectGender(g){
+  document.querySelectorAll('.g-btn').forEach(b=>b.classList.toggle('active',b.dataset.g===g));
+  selGender=g;checkForm();
+}
+
+function checkForm(){
+  const name=document.getElementById('nameInp').value.trim();
+  document.getElementById('submitBtn').disabled=!(name&&selGender&&selSubj);
+}
+document.getElementById('nameInp').addEventListener('input',checkForm);
+
+/* ── SCREEN TRANSITIONS ── */
+const sMain=document.getElementById('sMain');
+const sForm=document.getElementById('sForm');
+const sCard=document.getElementById('sCard');
+
+function show(sc){[sMain,sForm,sCard].forEach(s=>{s.classList.add('hidden');s.classList.remove('up');});sc.classList.remove('hidden');}
+function showUp(from,to){from.classList.add('up');setTimeout(()=>{show(to);},300);}
+
+document.getElementById('enterBtn').addEventListener('click',()=>showUp(sMain,sForm));
+document.getElementById('enterBtn').addEventListener('touchend',e=>{e.preventDefault();showUp(sMain,sForm);},{passive:false});
+document.getElementById('backBtn').addEventListener('click',()=>showUp(sForm,sMain));
+document.getElementById('backBtn').addEventListener('touchend',e=>{e.preventDefault();showUp(sForm,sMain);},{passive:false});
+document.getElementById('exitBtn').addEventListener('click',()=>showUp(sCard,sMain));
+document.getElementById('exitBtn').addEventListener('touchend',e=>{e.preventDefault();showUp(sCard,sMain);},{passive:false});
+
+document.getElementById('submitBtn').addEventListener('click',showCard);
+document.getElementById('submitBtn').addEventListener('touchend',e=>{e.preventDefault();showCard();},{passive:false});
+
+function showCard(){
+  const name=document.getElementById('nameInp').value.trim();
+  const data=getCard(name,selGender,selSubj);
+  document.getElementById('cardIcon').textContent=data.icon;
+  document.getElementById('cardTitle').innerHTML=data.title;
+  document.getElementById('cardBody').innerHTML=
+    `<p>${data.p1}</p><p>${data.p2}</p><p>${data.p3}</p><p>${data.p4}</p>`;
+  const wrap=sCard.querySelector('.card-wrap');
+  wrap.classList.remove('anim-in');void wrap.offsetWidth;wrap.classList.add('anim-in');
+  showUp(sForm,sCard);
+  sCard.querySelector('.card-wrap').scrollTop=0;
+}
+</script>
+</body>
+</html>
